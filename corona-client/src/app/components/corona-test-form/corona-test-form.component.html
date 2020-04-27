@@ -1,0 +1,77 @@
+<div class="container-fluid">
+  <div class="card">
+    <div class="card-header">
+      <button (click)="reset()" class="btn btn-primary float-right">
+        <span class="fa fa-refresh"></span> RESET
+      </button>
+    </div>
+    <div class="card-body">
+      <div class="row mb-3" *ngIf="currentQuestion && !isFinalQuestion">
+        <div class="col-md-12">
+          <div class="row d-flex justify-content-center alert alert-primary">
+            <p>{{ currentQuestion.questionText }}</p>
+          </div>
+          <div class="row">
+            <div class="col-md-6 d-flex justify-content-end">
+              <button (click)="yes()" class="btn btn-success"><span class="fa fa-check"></span> YES</button>
+            </div>
+            <div class="col-md-6">
+              <button (click)="no()" class="btn btn-warning"><span class="fa fa-remove"></span> NO</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row" *ngIf="currentQuestion && isFinalQuestion">
+        <div class="col-md-12">
+          <div class="row">
+            <div class="col-md-3" *ngFor="let item of answerList">
+              <div
+                class="d-inline-block h-100"
+                *ngIf="item.order != answerList.length - 1"
+              >
+                <div
+                  [ngClass]="
+                    item.yesOrNo
+                      ? 'card text-white bg-success mb-3 mx-auto h-100'
+                      : 'card text-white bg-warning mb-3 mx-auto h-100'
+                  "
+                  style="width: 10rem;"
+                >
+                  <div class="card-body">
+                    <h5 class="card-title">{{ item.question.questionText }}</h5>
+                    <p class="card-text">
+                      {{ item.yesOrNo ? "YES" : "NO" }}
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <div
+                class="d-inline-block"
+                *ngIf="item.order != answerList.length - 1"
+              >
+                <img
+                  src="../../../assets/images/long-arrow-right.png"
+                  class="img-thumbnail right-arrow"
+                  alt="..."
+                  width="50px"
+                />
+              </div>
+
+              <div
+                *ngIf="item.order == answerList.length - 1"
+                class="card text-white bg-danger mb-3 mx-auto h-100"
+                style="width: 10rem;"
+              >
+                <div class="card-body">
+                  <h5 class="card-title">{{ item.question.questionText }}</h5>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
