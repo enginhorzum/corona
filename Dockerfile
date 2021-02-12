@@ -5,10 +5,8 @@ EXPOSE 80
 
 FROM mcr.microsoft.com/dotnet/core/sdk:3.1.200-buster AS build
 
-# Version
-ARG version=1.2.0
 # Token for Sonarqube
-ARG sonar_login=359be3330fa97e3a428c989990328694ba1b1f0e
+ARG sonar_login=4670bbf73df6f32d4f8551d6fffc7122030a5b5b
 
 # Java (for Sonarqube)
 RUN apt-get update && \
@@ -25,16 +23,16 @@ RUN dotnet tool install dotnet-sonarscanner --tool-path /tools
 
 WORKDIR /src
 RUN /tools/dotnet-sonarscanner begin \
-    /k:corona-api \
-    /v:$version \
+    /k:Corona \
     /d:sonar.login=$sonar_login \
-    /d:sonar.host.url=https://192.168.1.35:9000 \
+    /d:sonar.host.url=http://192.168.1.35:9000 \
     /d:sonar.verbose=true \
     /d:sonar.cs.vstest.reportsPaths=/testresults/test_results.xml \
     /d:sonar.cs.opencover.reportsPaths=/testresults/coverage/coverage.opencover.xml
 
 COPY corona-api/corona-api.csproj corona-api/
 COPY corona-api-tests/corona-api-tests.csproj corona-api-tests/
+COPY corona.sln .
 RUN dotnet restore
 
 COPY corona-api corona-api/
@@ -55,7 +53,7 @@ ENTRYPOINT ["/src/run-tests.sh"]
 
 
 FROM build as sonar
-ARG sonar_login=
+ARG sonar_login=4670bbf73df6f32d4f8551d6fffc7122030a5b5b
 ENV sonar_login=$sonar_login
 
 CMD /tools/dotnet-sonarscanner end /d:sonar.login=$sonar_login
